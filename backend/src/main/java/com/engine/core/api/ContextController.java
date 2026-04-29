@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Autowired
+private ApplicationEventPublisher eventPublisher;
 @RestController
 @RequestMapping("/api/context")
 public class ContextController {
@@ -24,7 +25,8 @@ public class ContextController {
     @PostMapping("/push")
     public ResponseEntity<String> pushContext(@RequestBody ContextNode node) {
         repo.save(node);
-        compiler.compileState(); // Instantly rebuilds the single .md file
+        eventPublisher.publishEvent(new ContextEvent(node.id));        
+        // compiler.compileState(); // Instantly rebuilds the single .md file
         return ResponseEntity.ok("Node saved. Token-optimized Markdown updated.");
     }
 

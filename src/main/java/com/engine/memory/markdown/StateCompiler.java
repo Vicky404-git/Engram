@@ -3,8 +3,7 @@ package com.engine.memory.markdown;
 import com.engine.memory.store.ContextNode;
 import com.engine.memory.store.ContextRepository;
 import org.springframework.stereotype.Service;
-import com.engine.core.compression.*;
-import com.engine.memory.graph.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,15 +14,10 @@ import java.util.List;
 public class StateCompiler {
 
     private final ContextRepository repository;
-    private final ContextSummarizer summarizer;
-    private final ContextDeduplicator deduplicator = new ContextDeduplicator();
-    private final ContextFilter filter = new ContextFilter();
-    private final GraphBuilder graphBuilder = new GraphBuilder();
     private final Path contextFilePath = Paths.get("master-context.md");
 
-    public StateCompiler(ContextRepository repository, ContextSummarizer summarizer) {
-    this.repository = repository;
-    this.summarizer = summarizer;
+    public StateCompiler(ContextRepository repository) {
+        this.repository = repository;
     }
 
     /**
@@ -31,20 +25,8 @@ public class StateCompiler {
      * This file acts as the Single Source of Truth (SSoT) for the LLM.
      */
    public void compileState() {
-       List<ContextNode> nodes = repository.findTop50ByOrderByTimestampDesc();
-
+        List<ContextNode> nodes = repository.findTop50ByOrderByTimestampDesc();
         StringBuilder md = new StringBuilder();
-
-        
-// Compression pipeline
-nodes = deduplicator.deduplicate(nodes);
-nodes = filter.filterImportant(nodes);
-
-// Summary
-String summary = summarizer.summarize(nodes);
-
-// Graph
-List<GraphEdge> edges = graphBuilder.build(nodes);
 
         // 1. YAML Frontmatter
         md.append("---\n");
@@ -59,15 +41,15 @@ List<GraphEdge> edges = graphBuilder.build(nodes);
         md.append("## Conceptual Topology\n");
         md.append("```mermaid\n");
         md.append("graph TD;\n");
-        for (GraphEdge edge : edges) {
-          md.append(String.format(
-                "N%d -->|%s| N%d;\n",
-                edge.from,
-                edge.relation,
-                edge.to
-                ));
+        for (int i = 0; i < nodes.size(); i++) {
+            ContextNode n = nodes.get(i);
+            // Draw node
+            md.append(String.format("  N%d[%s: %s];\n", n.id, n.type, n.tags));
+            // Link chronological flow
+            if (i < nodes.size() - 1) {
+                md.append(String.format("  N%d --> N%d;\n", nodes.get(i+1).id, n.id));
+            }
         }
-
         md.append("```\n\n");
 
         // 3. The Raw Context Payload

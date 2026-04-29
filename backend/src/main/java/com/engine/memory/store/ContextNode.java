@@ -2,7 +2,8 @@ package com.engine.memory.store;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
+public Long parentId;
+public String relation;
 @Entity
 @Table(name = "context_nodes")
 public class ContextNode {

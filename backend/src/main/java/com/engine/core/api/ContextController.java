@@ -27,8 +27,11 @@ public class ContextController {
 
     @PostMapping("/push")
     public ResponseEntity<String> pushContext(@RequestBody ContextNode node) {
-        repo.save(node);
-        eventPublisher.publishEvent(new ContextEvent(node.id));
-        return ResponseEntity.ok("Node saved.");
-    }
+      if ("null".equals(node.parentId + "")) node.parentId = null;
+      if ("null".equals(node.relation)) node.relation = null;
+
+      repo.save(node);
+      eventPublisher.publishEvent(new ContextEvent(node.id));
+      return ResponseEntity.ok("Node saved.");
+}
 }

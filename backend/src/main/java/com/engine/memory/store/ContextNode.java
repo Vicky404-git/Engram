@@ -17,6 +17,8 @@ public class ContextNode {
     public Long parentId;
     public String relation;
 
+    public int weight = 1;
+
     public LocalDateTime timestamp;
 
     @PrePersist

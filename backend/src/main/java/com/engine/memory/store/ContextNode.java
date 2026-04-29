@@ -2,7 +2,6 @@ package com.engine.memory.store;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "context_nodes")
 public class ContextNode {
@@ -17,6 +16,7 @@ public class ContextNode {
 
     public Long parentId;
     public String relation;
+    public int weight = 1;
 
     public LocalDateTime timestamp;
 

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: context-engine
+
+  datasource:
+    url: jdbc:sqlite:memory.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    # --- THIS IS THE LINE TO FIX ---
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+server:
+  port: 8080
+  threads:
+    virtual:
+      enabled: true

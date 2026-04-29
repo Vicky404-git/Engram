@@ -1,0 +1,41 @@
+# ==========================================
+# Java & Maven
+# ==========================================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.log
+
+# ==========================================
+# IDE / Editor Files
+# ==========================================
+.idea/
+*.iml
+*.iws
+.project
+.classpath
+.settings/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# ==========================================
+# Application Specific & Secrets
+# ==========================================
+# NEVER commit your Groq/OpenAI keys
+.env
+# (Optional) You CAN commit .env.example if you want to show others the required variables
+
+# Local SQLite Database - we don't want to commit our active memory state
+*.db
+*.sqlite
+*.sqlite3
+memory.db
+
+# The dynamically generated Markdown context file
+# (Unless you specifically want version control on your mind map)
+master-context.md

@@ -1,0 +1,30 @@
+#!/bin/bash
+# ctx - Terminal Wrapper for the Context Engine
+
+BASE_URL="http://localhost:8080/api"
+
+if [ "$1" == "push" ]; then
+  type="$2"
+  tags="$3"
+  shift 3
+  content="$*"
+
+  # Removed | jq because the backend returns raw text, not JSON
+  curl -s -X POST "$BASE_URL/context/push" \
+    -H "Content-Type: application/json" \
+    -d "{\"type\":\"$type\", \"tags\":\"$tags\", \"content\":\"$content\"}"
+  echo "" # Add a newline for clean terminal output
+
+elif [ "$1" == "chat" ]; then
+  shift
+  prompt="$*"
+
+  curl -s -X POST "$BASE_URL/chat" \
+    -H "Content-Type: text/plain" \
+    -d "$prompt"
+  echo ""
+else
+  echo "Usage:"
+  echo "  ctx push <TYPE> <tags> <content>"
+  echo "  ctx chat <prompt>"
+fi

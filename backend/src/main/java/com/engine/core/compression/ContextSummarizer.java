@@ -6,20 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
-@Configuration
-public class AIConfig {
-
-    @Bean
-    public ChatLanguageModel chatModel(@Value("${GROQ_API_KEY}") String key) {
-        return OpenAiChatModel.builder()
-                .baseUrl("https://api.groq.com/openai/v1")
-                .apiKey(key)
-                .modelName("llama-3.1-8b-instant")
-                .build();
-    }
-}
-
 @Service
 public class ContextSummarizer {
 

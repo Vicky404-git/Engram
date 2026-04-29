@@ -42,7 +42,8 @@ nodes = filter.filterImportant(nodes);
 
 // Summary
 String summary = summarizer.summarize(nodes);
-
+md.append("## ⚡ Compressed State\n");
+md.append(summary).append("\n\n");
 // Graph
 List<GraphEdge> edges = graphBuilder.build(nodes);
 

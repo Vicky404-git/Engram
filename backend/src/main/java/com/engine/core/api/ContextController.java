@@ -5,6 +5,9 @@ import com.engine.memory.store.ContextRepository;
 import com.engine.memory.markdown.StateCompiler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import com.engine.core.watcher.ContextEvent;
 
 import java.util.List;
 @RestController

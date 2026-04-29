@@ -15,22 +15,18 @@ public class ContextController {
     private final ContextRepository repo;
     private final StateCompiler compiler;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     public ContextController(ContextRepository repo, StateCompiler compiler) {
         this.repo = repo;
         this.compiler = compiler;
     }
 
-    // Hit this endpoint to push a new Idea, Code Change, or Result
     @PostMapping("/push")
     public ResponseEntity<String> pushContext(@RequestBody ContextNode node) {
         repo.save(node);
-        compiler.compileState(); // Instantly rebuilds the single .md file
-        return ResponseEntity.ok("Node saved. Token-optimized Markdown updated.");
-    }
-
-    // The React/D3.js frontend hits this to draw the visual mind map
-    @GetMapping("/graph")
-    public ResponseEntity<List<ContextNode>> getGraphData() {
-        return ResponseEntity.ok(repo.findAll());
+        eventPublisher.publishEvent(new ContextEvent(node.id));
+        return ResponseEntity.ok("Node saved.");
     }
 }
